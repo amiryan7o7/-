@@ -2,247 +2,640 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>АгроПрогресс</title>
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>АгроПрогресс | Агрохолдинг полного цикла</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f4f6f3;
+            color: #2b2b2b;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* ===== HEADER (единая шапка) ===== */
+        .header {
+            background: linear-gradient(135deg, #1f4a2c 0%, #2e6b3f 100%);
+            color: #ffffff;
+            padding: 30px 0 20px 0;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+        }
+
+        .header__content {
+            text-align: center;
+        }
+
+        .header__title {
+            font-size: 42px;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .header__subtitle {
+            font-size: 18px;
+            opacity: 0.92;
+            font-weight: 400;
+        }
+
+        /* ===== НАВИГАЦИОННОЕ МЕНЮ ===== */
+        .nav {
+            background-color: #ffffff;
+            border-bottom: 2px solid #e0e8e2;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+
+        .nav__list {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            list-style: none;
+            padding: 0 20px;
+        }
+
+        .nav__link {
+            display: inline-block;
+            padding: 16px 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            color: #2e6b3f;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .nav__link:hover {
+            color: #1f4a2c;
+            border-bottom-color: #8fc9a3;
+        }
+
+        .nav__link.active {
+            color: #1f4a2c;
+            border-bottom-color: #2e6b3f;
+        }
+
+        /* ===== ОСНОВНОЙ КОНТЕНТ (смена страниц) ===== */
+        .page {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .page.active-page {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+
+        /* общие блоки */
+        .section {
+            padding: 60px 0;
+            border-bottom: 1px solid #dee6e0;
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        .section__title {
+            font-size: 32px;
+            color: #2e6b3f;
+            margin-bottom: 28px;
+            text-align: center;
+            font-weight: 700;
+            position: relative;
+        }
+        .section__title:after {
+            content: '';
+            display: block;
+            width: 70px;
+            height: 3px;
+            background-color: #8fc9a3;
+            margin: 12px auto 0;
+            border-radius: 2px;
+        }
+
+        .about__text {
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.7;
+            text-align: center;
+            font-size: 1.05rem;
+            background: #ffffffcc;
+            padding: 20px;
+            border-radius: 24px;
+            backdrop-filter: blur(2px);
+        }
+
+        /* карточки направлений */
+        .activity__list {
+            display: flex;
+            gap: 28px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .activity__item {
+            background-color: #ffffff;
+            padding: 28px 22px;
+            width: 310px;
+            border-radius: 24px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            transition: transform 0.25s ease, box-shadow 0.25s;
+            border: 1px solid #e6f0e8;
+        }
+        .activity__item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 16px 28px rgba(46,107,63,0.12);
+        }
+        .activity__item-title {
+            font-size: 22px;
+            margin-bottom: 12px;
+            color: #2e6b3f;
+        }
+        .activity__item-text {
+            font-size: 15px;
+            line-height: 1.5;
+            color: #2d3e2f;
+        }
+
+        /* преимущества */
+        .advantages__list {
+            max-width: 680px;
+            margin: 0 auto;
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .advantages__item {
+            background-color: #ffffff;
+            padding: 16px 22px;
+            border-left: 6px solid #2e6b3f;
+            border-radius: 16px;
+            font-weight: 500;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+            font-size: 1rem;
+        }
+
+        /* страница "О компании" — доп история */
+        .history-block {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            align-items: center;
+            background: #fff;
+            padding: 30px;
+            border-radius: 32px;
+            margin-top: 20px;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.03);
+        }
+        .history-text {
+            flex: 2;
+            line-height: 1.65;
+        }
+        .history-text p {
+            margin-bottom: 18px;
+            font-size: 1.02rem;
+        }
+        .mission-card {
+            flex: 1;
+            background: #eef5ea;
+            padding: 24px;
+            border-radius: 28px;
+            text-align: center;
+        }
+        .mission-card h3 {
+            color: #2e6b3f;
+            margin-bottom: 12px;
+        }
+        .values-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        .value-tag {
+            background: #e9f3e6;
+            padding: 8px 22px;
+            border-radius: 40px;
+            font-weight: 500;
+            color: #235b34;
+        }
+
+        /* страница ПРОДУКЦИЯ - каталог */
+        .catalog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            margin: 30px 0 20px;
+        }
+        .product-card {
+            background: white;
+            border-radius: 28px;
+            overflow: hidden;
+            transition: all 0.2s;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.05);
+            border: 1px solid #e2eedb;
+        }
+        .product-card:hover {
+            transform: scale(1.01);
+            box-shadow: 0 16px 28px rgba(0,0,0,0.1);
+        }
+        .product-img {
+            height: 180px;
+            background: #cbdcc2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            background: linear-gradient(135deg, #d9e8d1, #c2d6b6);
+        }
+        .product-info {
+            padding: 20px;
+        }
+        .product-title {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+            color: #235b34;
+        }
+        .product-desc {
+            font-size: 0.9rem;
+            color: #3a543e;
+            line-height: 1.45;
+            margin-bottom: 12px;
+        }
+        .product-badge {
+            background-color: #eef2e9;
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #2e6b3f;
+        }
+
+        /* контакты */
+        .contacts {
+            background-color: #e2eee6;
+            padding: 55px 0;
+            text-align: center;
+            border-radius: 0;
+            margin-top: 20px;
+        }
+        .contacts__title {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #2e6b3f;
+        }
+        .contacts__item {
+            margin-bottom: 10px;
+            font-size: 1.05rem;
+        }
+
+        /* футер */
+        .footer {
+            background-color: #1f4a2c;
+            color: #ffffff;
+            padding: 22px 0;
+            text-align: center;
+            margin-top: auto;
+        }
+        .footer__text {
+            font-size: 14px;
+            opacity: 0.85;
+        }
+
+        @media (max-width: 700px) {
+            .header__title { font-size: 30px; }
+            .nav__list { gap: 1.2rem; }
+            .nav__link { font-size: 1rem; }
+            .section { padding: 40px 0; }
+            .activity__item { width: 100%; max-width: 340px; }
+            .history-block { flex-direction: column; }
+        }
+    </style>
 </head>
 <body>
-<style>
-    * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
-}
 
-body {
-    background-color: #f4f6f3;
-    color: #2b2b2b;
-}
-
-.container {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
-/* HEADER */
-.header {
-    background-color: #2e6b3f;
-    color: #ffffff;
-    padding: 60px 0;
-}
-
-.header__content {
-    text-align: center;
-}
-
-.header__title {
-    font-size: 40px;
-    margin-bottom: 10px;
-}
-
-.header__subtitle {
-    font-size: 18px;
-    opacity: 0.9;
-}
-
-/* ABOUT */
-.about {
-    padding: 60px 0;
-}
-
-.about__title {
-    font-size: 28px;
-    color: #2e6b3f;
-    margin-bottom: 20px;
-    text-align: center;
-}
-
-.about__text {
-    max-width: 800px;
-    margin: 0 auto;
-    line-height: 1.6;
-    text-align: center;
-}
-
-/* ACTIVITY */
-.activity {
-    background-color: #ffffff;
-    padding: 60px 0;
-}
-
-.activity__title {
-    font-size: 28px;
-    color: #2e6b3f;
-    margin-bottom: 30px;
-    text-align: center;
-}
-
-.activity__list {
-    display: flex;
-    gap: 20px;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
-.activity__item {
-    background-color: #f4f6f3;
-    padding: 25px;
-    width: 300px;
-    border-radius: 8px;
-}
-
-.activity__item-title {
-    font-size: 20px;
-    margin-bottom: 10px;
-}
-
-.activity__item-text {
-    font-size: 14px;
-    line-height: 1.5;
-}
-
-/* ADVANTAGES */
-.advantages {
-    padding: 60px 0;
-}
-
-.advantages__title {
-    font-size: 28px;
-    color: #2e6b3f;
-    margin-bottom: 25px;
-    text-align: center;
-}
-
-.advantages__list {
-    max-width: 600px;
-    margin: 0 auto;
-    list-style: none;
-}
-
-.advantages__item {
-    background-color: #ffffff;
-    padding: 12px 15px;
-    margin-bottom: 10px;
-    border-left: 5px solid #2e6b3f;
-}
-
-/* CONTACTS */
-.contacts {
-    background-color: #e2eee6;
-    padding: 50px 0;
-    text-align: center;
-}
-
-.contacts__title {
-    font-size: 26px;
-    margin-bottom: 20px;
-    color: #2e6b3f;
-}
-
-.contacts__item {
-    margin-bottom: 8px;
-}
-
-/* FOOTER */
-.footer {
-    background-color: #1f4a2c;
-    color: #ffffff;
-    padding: 15px 0;
-    text-align: center;
-}
-
-.footer__text {
-    font-size: 14px;
-}
-</style>
 <header class="header">
     <div class="container">
         <div class="header__content">
-            <h1 class="header__title">АгроПрогресс</h1>
-            <p class="header__subtitle">
-                Современный агрохолдинг полного цикла
-            </p>
+            <h1 class="header__title">🌾 АгроПрогресс</h1>
+            <p class="header__subtitle">Современный агрохолдинг полного цикла — от поля до прилавка</p>
         </div>
     </div>
 </header>
 
-<main class="main">
+<div class="nav">
+    <div class="container">
+        <ul class="nav__list">
+            <li><a class="nav__link" data-page="home">🏠 Главная</a></li>
+            <li><a class="nav__link" data-page="about">🌿 О компании</a></li>
+            <li><a class="nav__link" data-page="products">🚜 Продукция</a></li>
+        </ul>
+    </div>
+</div>
 
-    <section class="about">
-        <div class="container">
-            <h2 class="about__title">О компании</h2>
-            <p class="about__text">
-                АгроПрогресс — это агрохолдинг, специализирующийся на
-                выращивании, переработке и поставке сельскохозяйственной
-                продукции. Компания внедряет современные технологии,
-                обеспечивая стабильное качество и экологичность продукции.
+<main class="main container">
+    <!-- ========== СТРАНИЦА 1: ГЛАВНАЯ ========== -->
+    <div id="home-page" class="page active-page">
+        <section class="section">
+            <h2 class="section__title">Добро пожаловать в АгроПрогресс</h2>
+            <p class="about__text" style="background: transparent; backdrop-filter: none; padding: 0 0 15px;">
+                Крупнейший вертикально-интегрированный агрохолдинг юга России. 
+                Сочетая традиции земледелия и инновации, мы гарантируем стабильность, 
+                экологичность и высокое качество каждой единицы продукции.
             </p>
-        </div>
-    </section>
+        </section>
 
-    <section class="activity">
-        <div class="container">
-            <h2 class="activity__title">Основные направления</h2>
-
+        <section class="section">
+            <h2 class="section__title">Ключевые направления</h2>
             <div class="activity__list">
                 <div class="activity__item">
-                    <h3 class="activity__item-title">Растениеводство</h3>
+                    <h3 class="activity__item-title">🌾 Растениеводство</h3>
                     <p class="activity__item-text">
-                        Выращивание зерновых и технических культур
-                        с применением современных агротехнологий.
+                        Выращивание пшеницы, кукурузы, подсолнечника, сои 
+                        с применением точного земледелия и цифрового мониторинга почв.
                     </p>
                 </div>
-
                 <div class="activity__item">
-                    <h3 class="activity__item-title">Животноводство</h3>
+                    <h3 class="activity__item-title">🐄 Животноводство</h3>
                     <p class="activity__item-text">
-                        Разведение и содержание сельскохозяйственных
-                        животных с соблюдением стандартов качества.
+                        Современные фермы с беспривязным содержанием КРС, 
+                        собственная кормовая база, ветеринарный контроль.
                     </p>
                 </div>
-
                 <div class="activity__item">
-                    <h3 class="activity__item-title">Переработка</h3>
+                    <h3 class="activity__item-title">🏭 Переработка</h3>
                     <p class="activity__item-text">
-                        Глубокая переработка сырья и выпуск
-                        готовой агропродукции.
+                        Элеваторы, маслоэкстракционный завод, цеха по глубокой 
+                        переработке зерна и производству комбикормов.
                     </p>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section class="advantages">
-        <div class="container">
-            <h2 class="advantages__title">Преимущества</h2>
+        <section class="section">
+            <h2 class="section__title">Почему выбирают нас</h2>
             <ul class="advantages__list">
-                <li class="advantages__item">Полный цикл производства</li>
-                <li class="advantages__item">Современное оборудование</li>
-                <li class="advantages__item">Экологическая безопасность</li>
-                <li class="advantages__item">Контроль качества на всех этапах</li>
+                <li class="advantages__item">✅ Полный цикл производства — от семени до готовой упаковки</li>
+                <li class="advantages__item">✅ Современное оборудование CLAAS, John Deere и собственные зерносушилки</li>
+                <li class="advantages__item">✅ Экологическая безопасность и снижение углеродного следа</li>
+                <li class="advantages__item">✅ Контроль качества на всех этапах: лаборатории и цифровое тестирование</li>
+                <li class="advantages__item">✅ Поддержка местных фермеров и развитие сельских территорий</li>
             </ul>
-        </div>
-    </section>
+        </section>
 
-    <section class="contacts">
-        <div class="container">
-            <h2 class="contacts__title">Контакты</h2>
-            <p class="contacts__item">📍 Россия, Краснодарский край</p>
-            <p class="contacts__item">📞 +7 (900) 123-45-67</p>
-            <p class="contacts__item">✉️ agroprogress@mail.ru</p>
+        <div class="contacts" style="margin: 20px 0 30px; border-radius: 32px;">
+            <div class="container">
+                <h2 class="contacts__title">Свяжитесь с нами</h2>
+                <p class="contacts__item">📍 Россия, Краснодарский край, г. Краснодар, ул. Агрономическая, 12</p>
+                <p class="contacts__item">📞 +7 (900) 123-45-67 (отдел продаж)</p>
+                <p class="contacts__item">✉️ agroprogress@mail.ru</p>
+                <p class="contacts__item">🕒 Пн–Пт: 9:00 – 18:00</p>
+            </div>
         </div>
-    </section>
+    </div>
 
+    <!-- ========== СТРАНИЦА 2: О КОМПАНИИ ========== -->
+    <div id="about-page" class="page">
+        <section class="section">
+            <h2 class="section__title">История и миссия</h2>
+            <div class="history-block">
+                <div class="history-text">
+                    <p>🌱 <strong>АгроПрогресс</strong> основан в 2002 году группой агрономов и технологов, объединивших разрозненные хозяйства Краснодарского края. За 20+ лет мы выросли в одного из лидеров южного региона, внедряя принципы устойчивого земледелия.</p>
+                    <p>📈 Сегодня наш земельный банк составляет более 75 000 гектаров, а животноводческие комплексы рассчитаны на 10 000 голов КРС. Ежегодно мы поставляем продукцию в 30+ регионов РФ и страны СНГ.</p>
+                    <p>🌟 Миссия — производить натуральные продукты питания, сохраняя плодородие почв для будущих поколений и поддерживая фермерские сообщества.</p>
+                </div>
+                <div class="mission-card">
+                    <h3>🎯 Наша цель</h3>
+                    <p style="font-size: 14px;">Стать ведущим агроэкологическим холдингом, где инновации служат природе и человеку.</p>
+                    <div style="margin-top: 18px;">🏅 <strong>Качество подтверждено</strong><br>ГОСТ, ISO 22000</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section__title">Наши ценности</h2>
+            <div class="values-list">
+                <span class="value-tag">🔬 Инновации</span>
+                <span class="value-tag">🤝 Открытость</span>
+                <span class="value-tag">🌍 Экологичность</span>
+                <span class="value-tag">⚙️ Технологичность</span>
+                <span class="value-tag">👨‍🌾 Уважение к труду</span>
+                <span class="value-tag">📊 Прозрачность</span>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section__title">Технологии и сертификаты</h2>
+            <div class="activity__list" style="gap: 20px;">
+                <div class="activity__item" style="width: 260px;">
+                    <h3 class="activity__item-title">GPS-мониторинг</h3>
+                    <p class="activity__item-text">Точное земледелие, дифференцированное внесение удобрений.</p>
+                </div>
+                <div class="activity__item" style="width: 260px;">
+                    <h3 class="activity__item-title">Собственная лаборатория</h3>
+                    <p class="activity__item-text">Анализ почвы, зерна, готовой продукции на 60+ показателей.</p>
+                </div>
+                <div class="activity__item" style="width: 260px;">
+                    <h3 class="activity__item-title">Эко-сертификаты</h3>
+                    <p class="activity__item-text">Organic соответствие, добровольная экосертификация.</p>
+                </div>
+            </div>
+        </section>
+        
+        <div class="contacts" style="margin-bottom: 30px; border-radius: 32px;">
+            <div class="container">
+                <h2 class="contacts__title">Реквизиты и партнёрство</h2>
+                <p class="contacts__item">📄 ИНН 2312345678 / КПП 231201001</p>
+                <p class="contacts__item">🏦 Банк: Южный ГБ Банк, БИК 040349555</p>
+                <p class="contacts__item">🤝 Стать партнёром: trade@agroprogress.ru</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== СТРАНИЦА 3: ПРОДУКЦИЯ ========== -->
+    <div id="products-page" class="page">
+        <section class="section">
+            <h2 class="section__title">Наша продукция</h2>
+            <p class="about__text" style="background: transparent; margin-bottom: 20px; font-size: 1rem;">
+                От зерна до готовых продуктов — предлагаем широкий ассортимент для оптовых клиентов и розничных сетей.
+            </p>
+
+            <div class="catalog-grid">
+                <div class="product-card">
+                    <div class="product-img">🌾🌻</div>
+                    <div class="product-info">
+                        <h3 class="product-title">Зерновые культуры</h3>
+                        <p class="product-desc">Пшеница 3-4 класса, фуражное зерно, кукуруза, ячмень высшего качества.</p>
+                        <span class="product-badge">опт от 20 т</span>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-img">🌻🫒</div>
+                    <div class="product-info">
+                        <h3 class="product-title">Масложировая продукция</h3>
+                        <p class="product-desc">Масло подсолнечное нерафинированное, шрот, жмых — органическая чистота.</p>
+                        <span class="product-badge">Premium класс</span>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-img">🥛🧀</div>
+                    <div class="product-info">
+                        <h3 class="product-title">Молочная линейка</h3>
+                        <p class="product-desc">Молоко пастеризованное, сливки, творог, сыры из собственного стада.</p>
+                        <span class="product-badge">Фермерское</span>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-img">🍞🥖</div>
+                    <div class="product-info">
+                        <h3 class="product-title">Мука и крупы</h3>
+                        <p class="product-desc">Мука пшеничная высший сорт, манная крупа, хлопья овсяные.</p>
+                        <span class="product-badge">Без добавок</span>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-img">🌿🥗</div>
+                    <div class="product-info">
+                        <h3 class="product-title">Технические культуры</h3>
+                        <p class="product-desc">Соя, рапс, подсолнечник — сырьё для биотоплива и пищевой отрасли.</p>
+                        <span class="product-badge">Экспортное</span>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-img">🍯🍎</div>
+                    <div class="product-info">
+                        <h3 class="product-title">Мед и ягоды</h3>
+                        <p class="product-desc">Мед с пасек Краснодарского края, замороженные ягоды, органические сиропы.</p>
+                        <span class="product-badge">Натур продукт</span>
+                    </div>
+                </div>
+            </div>
+            <div style="background:#e8f0e4; border-radius: 32px; padding: 24px; margin-top: 30px; text-align: center;">
+                <p style="font-weight: 600;">💡 Индивидуальные условия поставки, сертификаты и образцы — по запросу.</p>
+                <p style="margin-top: 10px;">📦 Доставка по РФ, Казахстану, Беларуси. Собственный автопарк и ж/д отгрузки.</p>
+            </div>
+        </section>
+
+        <div class="contacts" style="margin: 20px 0 30px; border-radius: 32px;">
+            <div class="container">
+                <h2 class="contacts__title">Отдел сбыта</h2>
+                <p class="contacts__item">📞 +7 (900) 765-43-21 (отдел оптовых продаж)</p>
+                <p class="contacts__item">📧 sales@agroprogress.ru</p>
+                <p class="contacts__item">📱 WhatsApp/Telegram: +7 (918) 444-55-66</p>
+            </div>
+        </div>
+    </div>
 </main>
 
 <footer class="footer">
     <div class="container">
-        <p class="footer__text">
-            © 2026 АгроПрогресс. Все права защищены.
-        </p>
+        <p class="footer__text">© 2002–2026 АгроПрогресс. Все права защищены. Политика обработки данных.</p>
+        <p class="footer__text" style="font-size: 12px; opacity: 0.7;">Сделано с заботой о земле 🌍</p>
     </div>
 </footer>
 
+<script>
+    (function() {
+        // Получаем все ссылки меню и все страницы
+        const navLinks = document.querySelectorAll('.nav__link');
+        const pages = {
+            home: document.getElementById('home-page'),
+            about: document.getElementById('about-page'),
+            products: document.getElementById('products-page')
+        };
+
+        // Функция смены активной страницы
+        function showPage(pageId) {
+            // скрыть все страницы
+            Object.values(pages).forEach(page => {
+                if (page) page.classList.remove('active-page');
+            });
+            // показать выбранную
+            if (pages[pageId]) {
+                pages[pageId].classList.add('active-page');
+            }
+            // обновить активный класс в меню
+            navLinks.forEach(link => {
+                const linkPage = link.getAttribute('data-page');
+                if (linkPage === pageId) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+            // Прокрутка вверх при смене страницы для лучшего UX
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            // сохраняем в localStorage текущую страницу (чтобы при перезагрузке не сбрасывалось)
+            localStorage.setItem('agroCurrentPage', pageId);
+        }
+
+        // Обработчик кликов по пунктам меню
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const pageId = link.getAttribute('data-page');
+                if (pageId && pages[pageId]) {
+                    showPage(pageId);
+                    // обновить URL без перезагрузки (history API)
+                    const newUrl = new URL(window.location.href);
+                    newUrl.searchParams.set('page', pageId);
+                    window.history.pushState({ pageId }, '', newUrl);
+                }
+            });
+        });
+
+        // Обработка кнопки назад/вперед (history)
+        window.addEventListener('popstate', (event) => {
+            const params = new URLSearchParams(window.location.search);
+            let page = params.get('page');
+            if (page && pages[page]) {
+                showPage(page);
+            } else {
+                // Если параметра нет, показываем главную
+                showPage('home');
+            }
+        });
+
+        // При загрузке: если в URL есть параметр page - открываем его, иначе из localStorage или home
+        const urlParams = new URLSearchParams(window.location.search);
+        let startPage = urlParams.get('page');
+        if (!startPage || !pages[startPage]) {
+            const saved = localStorage.getItem('agroCurrentPage');
+            if (saved && pages[saved]) startPage = saved;
+            else startPage = 'home';
+        }
+        showPage(startPage);
+        // синхронизируем URL с параметром, если его нет
+        if (!urlParams.has('page') || urlParams.get('page') !== startPage) {
+            const newUrl = new URL(window.location.href);
+            newUrl.searchParams.set('page', startPage);
+            window.history.replaceState({ pageId: startPage }, '', newUrl);
+        }
+    })();
+</script>
 </body>
 </html>
